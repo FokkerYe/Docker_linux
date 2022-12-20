@@ -1,0 +1,496 @@
+sydocker images
+docker pull ubuntu:latest
+docker pull alpine:latest
+docker pull <repository>:<tag>
+--------
+create image (unoffical image)
+docker pull ayk/hi_from_python
+--------------------
+docker inspect mongo:4.2 (check for layer)
+docker images
+root@ubuntu-server-22-04:~# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+alpine       latest    bfe296a52501   10 days ago   5.54MB
+ubuntu       latest    a8780b506fa4   2 weeks ago   77.8MB
+mongo        4.2       804494a44af1   3 weeks ago   388MB
+
+root@ubuntu-server-22-04:~# docker rmi 804494a44af1
+Untagged: mongo:4.2
+Untagged: mongo@sha256:488455d8ccc5ce1d006eef54c5d5e9ec03d68a73bf34cf1449e9f7757a7e8e89
+Deleted: sha256:804494a44af103bc556fd0471361382571ccdc025b52a778dea24c5b177cf4a1
+Deleted: sha256:83069df6dd992c8b19d0501402cb0d809e3f68fc07052df413d03f936770e272
+Deleted: sha256:f043dec432af357c6f24629d07b255ec7fa04663c1606d6eac416c423c38ed41
+Deleted: sha256:e802b823bbcd6e9257359f31e095483b9c071d8052e352b9a5fc0139d21cc590
+Deleted: sha256:1e235110181eeb74acba56f65df8e4e141bab0109835c71b084feca7b8d3905f
+Deleted: sha256:d40a2ea81a2e47d0c5906fb7f2a8d5762289f2fa710d506995fab0d8617b9cdf
+Deleted: sha256:787bae60a5af14332d09086bf2ab51813fe5206b1da7431a967be62817f6427e
+Deleted: sha256:46b99508c9f5211c112db57c1d37212ddc1e5dc46841d70a4b09aef4aec27a44
+Deleted: sha256:772a18c6fa1153af31d447c7aa51710bc99b3523b28c84fda64f86999ea02833
+Deleted: sha256:69f57fbceb1b420d7e4697e0f6514887b0805ee0059bea7d51e0a832962e74bf
+=======================================================
+root@ubuntu-server-22-04:~# docker images -q
+bfe296a52501
+a8780b506fa4
+======================
+all variable used output image id on remove
+docker rmi $(docker images -q) -f
+root@ubuntu-server-22-04:~# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+alpine       latest    bfe296a52501   10 days ago   5.54MB
+ubuntu       latest    a8780b506fa4   2 weeks ago   77.8MB
+root@ubuntu-server-22-04:~# docker rmi $(docker images -q) -f
+Untagged: alpine:latest
+Untagged: alpine@sha256:b95359c2505145f16c6aa384f9cc74eeff78eb36d308ca4fd902eeeb0a0b161b
+Deleted: sha256:bfe296a525011f7eb76075d688c681ca4feaad5afe3b142b36e30f1a171dc99a
+Deleted: sha256:e5e13b0c77cbb769548077189c3da2f0a764ceca06af49d8d558e759f5c232bd
+Untagged: ubuntu:latest
+Untagged: ubuntu@sha256:4b1d0c4a2d2aaf63b37111f34eb9fa89fa1bf53dd6e4ca954d47caebca4005c2
+Deleted: sha256:a8780b506fa4eeb1d0779a3c92c8d5d3e6a656c758135f62826768da458b5235
+root@ubuntu-server-22-04:~# docker images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+=========================================
+all command usefully
+docker pull <image name>
+docker images
+docker rmi <image ID>
+docker rmi $(docker images -q) -f
+docker run --help
+================
+Lab-2 (docker containers and commands)
+root@ubuntu-server-22-04:~# docker version
+Client: Docker Engine - Community
+ Version:           20.10.21
+ API version:       1.41
+ Go version:        go1.18.7
+ Git commit:        baeda1f
+ Built:             Tue Oct 25 18:01:58 2022
+ OS/Arch:           linux/amd64
+ Context:           default
+ Experimental:      true
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          20.10.21
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.18.7
+  Git commit:       3056208
+  Built:            Tue Oct 25 17:59:49 2022
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          1.6.10
+  GitCommit:        770bd0108c32f3fb5c73ae1264f7e503fe7b2661
+ runc:
+  Version:          1.1.4
+  GitCommit:        v1.1.4-0-g5fd4c4d
+ docker-init:
+  Version:          0.19.0
+  GitCommit:        de40ad0
+root@ubuntu-server-22-04:~#
+create container command=docker run -it ubuntu:latest
+root@ubuntu-server-22-04:~# docker run -it ubuntu:latest
+Unable to find image 'ubuntu:latest' locally
+latest: Pulling from library/ubuntu
+e96e057aae67: Already exists
+Digest: sha256:4b1d0c4a2d2aaf63b37111f34eb9fa89fa1bf53dd6e4ca954d47caebca4005c2
+Status: Downloaded newer image for ubuntu:latest
+root@aad4148781cd:/# uname -a
+Linux aad4148781cd 5.15.0-53-generic #59-Ubuntu SMP Mon Oct 17 18:53:30 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+root@aad4148781cd:/# ping www.google.com
+bash: ping: command not found
+root@aad4148781cd:/# whoami
+root
+root@aad4148781cd:/# exit
+exit
+root@ubuntu-server-22-
+note:docker run -<option><image>:<tag>
+ctr+PQ background running 
+
+=============
+root@ubuntu-server-22-04:~# docker run -d -it ubuntu:latest
+6d4e360a3dbc5abc1187a4a55a59b4a7df107ebc0fedf98f287a6d774f13611f
+root@ubuntu-server-22-04:~# docker ps
+CONTAINER ID   IMAGE           COMMAND   CREATED         STATUS         PORTS     NAMES
+6d4e360a3dbc   ubuntu:latest   "bash"    5 seconds ago   Up 5 seconds             silly_volhard
+root@ubuntu-server-22-04:~#
+=======================
+recall backgruoud running container
+docker exec -it <dockerid> <shell>
+root@ubuntu-server-22-04:~# docker ps
+CONTAINER ID   IMAGE           COMMAND   CREATED         STATUS         PORTS     NAMES
+6d4e360a3dbc   ubuntu:latest   "bash"    5 seconds ago   Up 5 seconds             silly_volhard
+root@ubuntu-server-22-04:~# docker exec -it 6d4e360a3dbc bash
+root@6d4e360a3dbc:/# cat /etc/os-release
+PRETTY_NAME="Ubuntu 22.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.1 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+root@6d4e360a3dbc:/#
+
+====================
+ps -elf (checking for proces)
+================
+Naming Container
+root@ubuntu-server-22-04:~# docker run --name aungyekyaw -it alpine:latest
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+ca7dd9ec2225: Pull complete
+Digest: sha256:b95359c2505145f16c6aa384f9cc74eeff78eb36d308ca4fd902eeeb0a0b161b
+Status: Downloaded newer image for alpine:latest
+/ # cd /tmp/
+/tmp # echo "Hello docker">docker.txt
+/tmp # ls
+docker.txt
+/tmp # cat docker.txt
+Hello docker
+/tmp # exit
+root@ubuntu-server-22-04:~#
+-------
+root@ubuntu-server-22-04:~# docker ps
+CONTAINER ID   IMAGE           COMMAND   CREATED         STATUS         PORTS     NAMES
+6d4e360a3dbc   ubuntu:latest   "bash"    9 minutes ago   Up 9 minutes             silly_volhard
+root@ubuntu-server-22-04:~# docker ps -a
+CONTAINER ID   IMAGE           COMMAND     CREATED              STATUS                        PORTS     NAMES
+98d20a37c733   alpine:latest   "/bin/sh"   About a minute ago   Exited (0) 39 seconds ago               aungyekyaw
+6d4e360a3dbc   ubuntu:latest   "bash"      9 minutes ago        Up 9 minutes                            silly_volhard
+aad4148781cd   ubuntu:latest   "bash"      13 minutes ago       Exited (0) 12 minutes ago               jolly_carver
+9bbab2c2e45e   ubuntu:latest   "bash"      22 hours ago         Exited (255) 54 minutes ago             epic_vaughan
+b6163b46582d   ubuntu:latest   "bash"      23 hours ago         Exited (0) 23 hours ago                 inspiring_dirac
+6bcd1f63fbc5   ubuntu          "bash"      23 hours ago         Exited (129) 23 hours ago               zen_heisenberg
+de25e45e2e51   feb5d9fea6a5    "/hello"    23 hours ago         Exited (0) 23 hours ago                 friendly_blackwell
+root@ubuntu-server-22-04:~# docker ps -a
+CONTAINER ID   IMAGE           COMMAND     CREATED          STATUS                          PORTS     NAMES
+98d20a37c733   alpine:latest   "/bin/sh"   2 minutes ago    Exited (0) About a minute ago             aungyekyaw
+6d4e360a3dbc   ubuntu:latest   "bash"      10 minutes ago   Up 10 minutes                             silly_volhard
+aad4148781cd   ubuntu:latest   "bash"      13 minutes ago   Exited (0) 13 minutes ago                 jolly_carver
+9bbab2c2e45e   ubuntu:latest   "bash"      23 hours ago     Exited (255) 55 minutes ago               epic_vaughan
+b6163b46582d   ubuntu:latest   "bash"      23 hours ago     Exited (0) 23 hours ago                   inspiring_dirac
+6bcd1f63fbc5   ubuntu          "bash"      23 hours ago     Exited (129) 23 hours ago                 zen_heisenberg
+de25e45e2e51   feb5d9fea6a5    "/hello"    23 hours ago     Exited (0) 23 hours ago                   friendly_blackwell
+root@ubuntu-server-22-04:~# docker start aungyekyaw
+aungyekyaw
+root@ubuntu-server-22-04:~# docker exec -it aungyekyaw sh
+/ # cat /tmp/docker.txt
+Hello docker
+/ #
+
+
+
+===========================
+Direct Command to Container
+docker run centos:latest whoami
+root@ubuntu-server-22-04:~# docker run centos:latest whoami
+Unable to find image 'centos:latest' locally
+latest: Pulling from library/centos
+a1d0c7532777: Pull complete
+Digest: sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177
+Status: Downloaded newer image for centos:latest
+root
+root@ubuntu-server-22-04:~# docker run centos:latest uname -a
+Linux 69e0fcb32000 5.15.0-53-generic #59-Ubuntu SMP Mon Oct 17 18:53:30 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+root@ubuntu-server-22-04:~#
+===========
+Staistic of Container
+root@ubuntu-server-22-04:~#
+root@ubuntu-server-22-04:~# docker images
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+alpine       latest    bfe296a52501   10 days ago     5.54MB
+ubuntu       latest    a8780b506fa4   2 weeks ago     77.8MB
+centos       latest    5d0da3dc9764   14 months ago   231MB
+root@ubuntu-server-22-04:~# docker run -dit  a8780b506fa4
+00bf68c88d341ad5e6600e10c1d706da2ea7fa66c63b63a3660ca9931f66d657
+root@ubuntu-server-22-04:~#  docker run -dit bfe296a52501
+3b6c0cd191c9e5c22eefcad0c22d0125894e77a64ef45840ad948e827d117d58
+root@ubuntu-server-22-04:~# docker stats 00b 3b6
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     726B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+00bf68c88d34   wonderful_kapitsa   0.00%     808KiB / 1.93GiB    0.04%     796B / 0B   0B / 0B     1
+3b6c0cd191c9   youthful_napier     0.00%     372KiB / 1.93GiB    0.02%     796B / 0B   0B / 0B     1
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O     BLOCK I/O   PIDS
+========================================
+check cpu ram usage 
+docker stats --all --format "table\{{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}" fe3 e0c
+===================
+Deleting Containers
+root@ubuntu-server-22-04:~# docker ps
+CONTAINER ID   IMAGE           COMMAND     CREATED          STATUS          PORTS     NAMES
+3b6c0cd191c9   bfe296a52501    "/bin/sh"   5 minutes ago    Up 5 minutes              youthful_napier
+00bf68c88d34   a8780b506fa4    "bash"      5 minutes ago    Up 5 minutes              wonderful_kapitsa
+98d20a37c733   alpine:latest   "/bin/sh"   21 minutes ago   Up 18 minutes             aungyekyaw
+6d4e360a3dbc   ubuntu:latest   "bash"      28 minutes ago   Up 28 minutes             silly_volhard
+root@ubuntu-server-22-04:~# docker stop aungyekyaw
+aungyekyaw
+root@ubuntu-server-22-04:~# docker rm aungyekyw
+Error: No such container: aungyekyw
+root@ubuntu-server-22-04:~# docker rm aungyekyaw
+aungyekyaw
+root@ubuntu-server-22-04:~# docker ps
+CONTAINER ID   IMAGE           COMMAND     CREATED          STATUS          PORTS     NAMES
+3b6c0cd191c9   bfe296a52501    "/bin/sh"   6 minutes ago    Up 6 minutes              youthful_napier
+00bf68c88d34   a8780b506fa4    "bash"      6 minutes ago    Up 6 minutes              wonderful_kapitsa
+6d4e360a3dbc   ubuntu:latest   "bash"      30 minutes ago   Up 30 minutes             silly_volhard
+root@ubuntu-server-22-04:~# docker ps -a
+CONTAINER ID   IMAGE           COMMAND      CREATED          STATUS                           PORTS     NAMES
+3b6c0cd191c9   bfe296a52501    "/bin/sh"    6 minutes ago    Up 6 minutes                               youthful_napier
+00bf68c88d34   a8780b506fa4    "bash"       6 minutes ago    Up 6 minutes                               wonderful_kapitsa
+69e0fcb32000   centos:latest   "uname -a"   8 minutes ago    Exited (0) 8 minutes ago                   cranky_satoshi
+7eb0692e2c2c   centos:latest   "whoami"     9 minutes ago    Exited (0) 9 minutes ago                   cranky_nightingale
+6d4e360a3dbc   ubuntu:latest   "bash"       30 minutes ago   Up 30 minutes                              silly_volhard
+aad4148781cd   ubuntu:latest   "bash"       34 minutes ago   Exited (0) 33 minutes ago                  jolly_carver
+9bbab2c2e45e   ubuntu:latest   "bash"       23 hours ago     Exited (255) About an hour ago             epic_vaughan
+b6163b46582d   ubuntu:latest   "bash"       23 hours ago     Exited (0) 23 hours ago                    inspiring_dirac
+6bcd1f63fbc5   ubuntu          "bash"       23 hours ago     Exited (129) 23 hours ago                  zen_heisenberg
+de25e45e2e51   feb5d9fea6a5    "/hello"     24 hours ago     Exited (0) 24 hours ago                    friendly_blackwell
+root@ubuntu-server-22-04:~#
+
+--container note----
+docker run -it <image name>:<tag>
+docker run -name NAME <image>:<tag>
+docker run --name NAME <image>:<tag><shell>
+docker ps
+docker exec -it <container ID> <shell>
+docker start <container ID>
+docker stop <container ID>
+docker rm <container ID>
+========================
+ch-5 Docker and Devops
+cat /etc/os-release
+docker pull ubuntu:latest
+docker images
+apt update && apt upgrade
+service apache2 start
+var/www/html
+cat index.html
+docker ps
+docker commit -a aungekyaw -m "Apache2 webserver with index file 8c5 aungyekayw/apache2
+docker images
+docker run -it -p 80:80 alf
+============================
+ch-6 Dockerfile And Commands
+creating Dockerfiel (Apache Web Server)
+=========================
+Ref=https://winhtaikaung76.medium.com/docker-%E1%80%94%E1%80%B2%E1%80%B7-development-%E1%80%9C%E1%80%AF%E1%80%95%E1%80%BA%E1%80%80%E1%80%BC%E1%80%99%E1%80%9A%E1%80%BA-e98ad953d517
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
