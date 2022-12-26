@@ -1,0 +1,56 @@
+
+
+Postgresql master database server: 		10.20.20.9
+Postgresql standby database server:		10.20.20.8
+-----------------------------------------------
+Postgresql master database server: 		10.20.20.9
+
+# su - postgres
+$ psql -c "ALTER SYSTEM SET listen_addresses TO '*';"
+# su – postgres
+$ createuser --replication -P -e replicator
+$ exit
+host    replication     replicator      10.20.20.8/24     md5
+# systemctl restart postgresql-12.service
+
+# su - postgres
+$ psql -c "SELECT * FROM pg_replication_slots;"
+$ exit
+
+$ psql -c "\x" -c "SELECT * FROM pg_stat_replication;"
+
+[master]postgres=# CREATE DATABASE tecmint;
+[standby]postgres=# \l
+
+************************
+ synchronous_standby
+$ psql -c "ALTER SYSTEM SET synchronous_standby_names TO  '*';"
+# systemctl reload postgresql-12.service
+$ psql -c "\x" -c "SELECT * FROM pg_stat_replication;"
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+=======================
+Postgresql standby database server:		10.20.20.8
+# systemctl stop postgresql-12.service
+# su - postgres
+$ cp -R /var/lib/pgsql/12/data /var/lib/pgsql/12/data_orig
+$ rm -rf /var/lib/pgsql/12/data/*
+
+$ pg_basebackup -h 10.20.20.9 -D /var/lib/pgsql/12/data -U replicator -P -v  -R -X stream -C -S pgstandby1
+$ exit
+# ls -l /var/lib/pgsql/12/data/
+
+# cat /var/lib/pgsql/12/data/postgresql.auto.conf
+# systemctl start postgresql-12
+
+Testing PostgreSQL Streaming Replication
+$ psql -c "\x" -c "SELECT * FROM pg_stat_wal_receiver;"
+===================================
+Ref=https://www.tecmint.com/configure-postgresql-streaming-replication-in-centos-8/
+
+
+
